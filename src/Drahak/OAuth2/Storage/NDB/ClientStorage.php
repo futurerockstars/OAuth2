@@ -4,7 +4,7 @@ namespace Drahak\OAuth2\Storage\NDB;
 use Drahak\OAuth2\Storage\Clients\IClientStorage;
 use Drahak\OAuth2\Storage\Clients\IClient;
 use Drahak\OAuth2\Storage\Clients\Client;
-use Nette\Database\SelectionFactory;
+use Nette\Database\Context;
 use Nette\Object;
 
 /**
@@ -15,12 +15,12 @@ use Nette\Object;
 class ClientStorage extends Object implements IClientStorage
 {
 
-	/** @var SelectionFactory */
-	private $selectionFactory;
+	/** @var Context */
+	private $context;
 
-	public function __construct(SelectionFactory $selectionFactory)
+	public function __construct(Context $context)
 	{
-		$this->selectionFactory = $selectionFactory;
+		$this->context = $context;
 	}
 
 	/**
@@ -29,7 +29,7 @@ class ClientStorage extends Object implements IClientStorage
 	 */
 	protected function getTable()
 	{
-		return $this->selectionFactory->table('oauth_client');
+		return $this->context->table('oauth_client');
 	}
 
 	/**
