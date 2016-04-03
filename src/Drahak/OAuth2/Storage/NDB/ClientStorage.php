@@ -60,10 +60,10 @@ class ClientStorage extends Object implements IClientStorage
 	public function canUseGrantType($clientId, $grantType)
 	{
 		$result = $this->getTable()->getConnection()->query('
-			SELECT name
-			FROM oauth_client_grant
-			RIGHT JOIN oauth_grant AS g ON grant_id = g.id AND name = ?
-			WHERE client_id = ?
+			SELECT g.name
+			FROM oauth_client_grant AS cg
+			RIGHT JOIN oauth_grant AS g ON cg.grant_id = cg.grant_id AND g.name = ?
+			WHERE cg.client_id = ?
 		', $grantType, $clientId);
 		return (bool)$result->fetch();
 	}
