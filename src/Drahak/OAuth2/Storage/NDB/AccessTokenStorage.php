@@ -5,7 +5,7 @@ use Drahak\OAuth2\InvalidScopeException;
 use Drahak\OAuth2\Storage\AccessTokens\AccessToken;
 use Drahak\OAuth2\Storage\AccessTokens\IAccessTokenStorage;
 use Drahak\OAuth2\Storage\AccessTokens\IAccessToken;
-use Nette\Database\SelectionFactory;
+use Nette\Database\Context;
 use Nette\Database\SqlLiteral;
 use Nette\Database\Table\ActiveRow;
 use Nette\Object;
@@ -18,12 +18,12 @@ use Nette\Object;
 class AccessTokenStorage extends Object implements IAccessTokenStorage
 {
 
-	/** @var SelectionFactory */
-	private $selectionFactory;
+	/** @var Context */
+	private $context;
 
-	public function __construct(SelectionFactory $selectionFactory)
+	public function __construct(Context $context)
 	{
-		$this->selectionFactory = $selectionFactory;
+		$this->context = $context;
 	}
 
 	/**
@@ -32,7 +32,7 @@ class AccessTokenStorage extends Object implements IAccessTokenStorage
 	 */
 	protected function getTable()
 	{
-		return $this->selectionFactory->table('oauth_access_token');
+		return $this->context->table('oauth_access_token');
 	}
 
 	/**
@@ -41,7 +41,7 @@ class AccessTokenStorage extends Object implements IAccessTokenStorage
 	 */
 	protected function getScopeTable()
 	{
-		return $this->selectionFactory->table('oauth_access_token_scope');
+		return $this->context->table('oauth_access_token_scope');
 	}
 
 	/******************** IAccessTokenStorage ********************/

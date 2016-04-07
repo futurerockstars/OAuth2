@@ -5,7 +5,7 @@ use Drahak\OAuth2\InvalidScopeException;
 use Drahak\OAuth2\Storage\AuthorizationCodes\AuthorizationCode;
 use Drahak\OAuth2\Storage\AuthorizationCodes\IAuthorizationCodeStorage;
 use Drahak\OAuth2\Storage\AuthorizationCodes\IAuthorizationCode;
-use Nette\Database\SelectionFactory;
+use Nette\Database\Context;
 use Nette\Database\SqlLiteral;
 use Nette\Database\Table\ActiveRow;
 use Nette\Object;
@@ -18,12 +18,12 @@ use Nette\Object;
 class AuthorizationCodeStorage extends Object implements IAuthorizationCodeStorage
 {
 
-	/** @var SelectionFactory */
-	private $selectionFactory;
+	/** @var Context */
+	private $context;
 
-	public function __construct(SelectionFactory $selectionFactory)
+	public function __construct(Context $context)
 	{
-		$this->selectionFactory = $selectionFactory;
+		$this->context = $context;
 	}
 
 	/**
@@ -32,7 +32,7 @@ class AuthorizationCodeStorage extends Object implements IAuthorizationCodeStora
 	 */
 	protected function getTable()
 	{
-		return $this->selectionFactory->table('oauth_authorization_code');
+		return $this->context->table('oauth_authorization_code');
 	}
 
 	/**
@@ -41,7 +41,7 @@ class AuthorizationCodeStorage extends Object implements IAuthorizationCodeStora
 	 */
 	protected function getScopeTable()
 	{
-		return $this->selectionFactory->table('oauth_authorization_code_scope');
+		return $this->context->table('oauth_authorization_code_scope');
 	}
 
 	/******************** IAuthorizationCodeStorage ********************/

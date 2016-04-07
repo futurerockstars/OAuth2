@@ -4,7 +4,7 @@ namespace Drahak\OAuth2\Storage\NDB;
 use Drahak\OAuth2\Storage\Clients\IClientStorage;
 use Drahak\OAuth2\Storage\Clients\IClient;
 use Drahak\OAuth2\Storage\Clients\Client;
-use Nette\Database\SelectionFactory;
+use Nette\Database\Context;
 use Nette\Object;
 
 /**
@@ -15,12 +15,12 @@ use Nette\Object;
 class ClientStorage extends Object implements IClientStorage
 {
 
-	/** @var SelectionFactory */
-	private $selectionFactory;
+	/** @var Context */
+	private $context;
 
-	public function __construct(SelectionFactory $selectionFactory)
+	public function __construct(Context $context)
 	{
-		$this->selectionFactory = $selectionFactory;
+		$this->context = $context;
 	}
 
 	/**
@@ -29,7 +29,7 @@ class ClientStorage extends Object implements IClientStorage
 	 */
 	protected function getTable()
 	{
-		return $this->selectionFactory->table('oauth_client');
+		return $this->context->table('oauth_client');
 	}
 
 	/**
@@ -42,13 +42,13 @@ class ClientStorage extends Object implements IClientStorage
 	{
 		if (!$clientId) return NULL;
 
-		$selection = $this->getTable()->where(array('id' => $clientId));
+		$selection = $this->getTable()->where(array('client_id' => $clientId));
 		if ($clientSecret) {
 			$selection->where(array('secret' => $clientSecret));
 		}
 		$data = $selection->fetch();
 		if (!$data) return NULL;
-		return new Client($data['id'], $data['secret'], $data['redirect_url']);
+		return new Client($data['client_id'], $data['secret'], $data['redirect_url']);
 	}
 
 	/**
@@ -60,10 +60,10 @@ class ClientStorage extends Object implements IClientStorage
 	public function canUseGrantType($clientId, $grantType)
 	{
 		$result = $this->getTable()->getConnection()->query('
-			SELECT name
-			FROM oauth_client_grant
-			RIGHT JOIN oauth_grant AS g ON grant_id = g.id AND name = ?
-			WHERE client_id = ?
+			SELECT g.name
+			FROM oauth_client_grant AS cg
+			RIGHT JOIN oauth_grant AS g ON cg.grant_id = cg.grant_id AND g.name = ?
+			WHERE cg.client_id = ?
 		', $grantType, $clientId);
 		return (bool)$result->fetch();
 	}

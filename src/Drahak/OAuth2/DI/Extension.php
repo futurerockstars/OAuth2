@@ -77,7 +77,7 @@ class Extension extends CompilerExtension
 			->addSetup('$service->addToken(?)', array($this->prefix('@authorizationCode')));
 
 		// Nette database Storage
-		if ($this->getByType($container, 'Nette\Database\SelectionFactory')) {
+		if ($this->getByType($container, 'Nette\Database\Context')) {
 			$container->addDefinition($this->prefix('accessTokenStorage'))
 				->setClass('Drahak\OAuth2\Storage\NDB\AccessTokenStorage');
 			$container->addDefinition($this->prefix('refreshTokenStorage'))
