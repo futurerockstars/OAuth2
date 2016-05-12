@@ -14,18 +14,34 @@ use Nette\DI\ServiceDefinition;
 class Extension extends CompilerExtension
 {
 
+	protected $storages = array(
+		'ndb' => array(
+			'accessTokenStorage' => 'Drahak\OAuth2\Storage\NDB\AccessTokenStorage',
+			'authorizationCodeStorage' => 'Drahak\OAuth2\Storage\NDB\AuthorizationCodeStorage',
+			'clientStorage' => 'Drahak\OAuth2\Storage\NDB\ClientStorage',
+			'refreshTokenStorage' => 'Drahak\OAuth2\Storage\NDB\RefreshTokenStorage',
+		),
+		'dibi' => array(
+			'accessTokenStorage' => 'Drahak\OAuth2\Storage\Dibi\AccessTokenStorage',
+			'authorizationCodeStorage' => 'Drahak\OAuth2\Storage\Dibi\AuthorizationCodeStorage',
+			'clientStorage' => 'Drahak\OAuth2\Storage\Dibi\ClientStorage',
+			'refreshTokenStorage' => 'Drahak\OAuth2\Storage\Dibi\RefreshTokenStorage',
+		),
+	);
+
 	/**
 	 * Default DI settings
 	 * @var array
 	 */
 	protected $defaults = array(
-		'accessTokenStorage' => 'Drahak\OAuth2\Storage\NDB\AccessTokenStorage',
-		'authorizationCodeStorage' => 'Drahak\OAuth2\Storage\NDB\AuthorizationCodeStorage',
-		'clientStorage' => 'Drahak\OAuth2\Storage\NDB\ClientStorage',
-		'refreshTokenStorage' => 'Drahak\OAuth2\Storage\NDB\RefreshTokenStorage',
+		'accessTokenStorage' => NULL,
+		'authorizationCodeStorage' => NULL,
+		'clientStorage' => NULL,
+		'refreshTokenStorage' => NULL,
 		'accessTokenLifetime' => 3600, // 1 hour
 		'refreshTokenLifetime' => 36000, // 10 hours
-		'authorizationCodeLifetime' => 360 // 6 minutes
+		'authorizationCodeLifetime' => 360, // 6 minutes
+		'storage' => NULL,
 	);
 
 	/**
@@ -81,16 +97,20 @@ class Extension extends CompilerExtension
 			->addSetup('$service->addToken(?)', array($this->prefix('@authorizationCode')));
 
 		// Nette database Storage
-		if ($this->getByType($container, 'Nette\Database\Context')) {
-			$container->addDefinition($this->prefix('accessTokenStorage'))
-				->setClass($config['accessTokenStorage']);
-			$container->addDefinition($this->prefix('refreshTokenStorage'))
-				->setClass($config['refreshTokenStorage']);
-			$container->addDefinition($this->prefix('authorizationCodeStorage'))
-				->setClass($config['authorizationCodeStorage']);
-			$container->addDefinition($this->prefix('clientStorage'))
-				->setClass($config['clientStorage']);
+		if (strtoupper($config['storage']) == 'NDB' || (is_null($config['storage']) && $this->getByType($container, 'Nette\Database\Context'))) {
+			$storageIndex = 'ndb';
+		} elseif (strtoupper($config['storage']) == 'DIBI' || (is_null($config['storage']) && $this->getByType($container, 'DibiConnection'))) {
+			$storageIndex = 'dibi';
 		}
+
+		$container->addDefinition($this->prefix('accessTokenStorage'))
+			->setClass($config['accessTokenStorage'] ?: $this->storages[$storageIndex]['accessTokenStorage']);
+		$container->addDefinition($this->prefix('refreshTokenStorage'))
+			->setClass($config['refreshTokenStorage'] ?: $this->storages[$storageIndex]['refreshTokenStorage']);
+		$container->addDefinition($this->prefix('authorizationCodeStorage'))
+			->setClass($config['authorizationCodeStorage'] ?: $this->storages[$storageIndex]['authorizationCodeStorage']);
+		$container->addDefinition($this->prefix('clientStorage'))
+			->setClass($config['clientStorage'] ?: $this->storages[$storageIndex]['clientStorage']);
 	}
 
 	/**
