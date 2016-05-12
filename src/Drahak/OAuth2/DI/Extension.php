@@ -96,6 +96,9 @@ class Extension extends CompilerExtension
 			->addSetup('$service->addToken(?)', array($this->prefix('@refreshToken')))
 			->addSetup('$service->addToken(?)', array($this->prefix('@authorizationCode')));
 
+		// Default fallback value
+		$storageIndex = 'ndb';
+
 		// Nette database Storage
 		if (strtoupper($config['storage']) == 'NDB' || (is_null($config['storage']) && $this->getByType($container, 'Nette\Database\Context'))) {
 			$storageIndex = 'ndb';
