@@ -18,6 +18,13 @@ Then add following code to your app bootstrap file before creating container:
 Drahak\OAuth2\DI\Extension::install($configurator);
 ```
 
+or register it in config.neon:
+
+```yaml
+extensions:
+  restful: Drahak\Restful\DI\RestfulExtension
+```
+
 Neon configuration
 ------------------
 ```yaml
@@ -25,11 +32,17 @@ oauth2:
 	accessTokenLifetime: 3600 # 1 hour
 	refreshTokenLifetime: 36000 # 10 hours
 	authorizationCodeLifetime: 360 # 6 minutes
+	storage: 'ndb' # allowed values: 'ndb', 'dibi'
+	accessTokenStorage: 'Drahak\OAuth2\Storage\NDB\AccessTokenStorage'
+	authorizationCodeStorage: 'Drahak\OAuth2\Storage\NDB\AuthorizationCodeStorage'
+	clientStorage: 'Drahak\OAuth2\Storage\NDB\ClientStorage'
+	refreshTokenStorage: 'Drahak\OAuth2\Storage\NDB\RefreshTokenStorage'
 ```
 
 - `accessTokenLifetime` - access token life time in seconds
 - `refreshTokenLifetime` - refresh token life time in seconds
 - `authorizationCodeLifetime` - authorization code life time in seconds
+- `storage` - storage will switch between default NDB and dibi storage. You can use your storage for each storage part.
 
 OAuth2
 ------
