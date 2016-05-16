@@ -17,6 +17,9 @@ class AuthorizationCode extends GrantType
 	/** @var array */
 	private $scope = array();
 
+	/** @var Storage\AuthorizationCodes\AuthorizationCode */
+	private $entity;
+
 	/**
 	 * @return array
 	 */
@@ -42,8 +45,8 @@ class AuthorizationCode extends GrantType
 	{
 		$code = $this->input->getParameter('code');
 
-		$entity = $this->token->getToken(ITokenFacade::AUTHORIZATION_CODE)->getEntity($code);
-		$this->scope = $entity->getScope();
+		$this->entity = $this->token->getToken(ITokenFacade::AUTHORIZATION_CODE)->getEntity($code);
+		$this->scope = $this->entity->getScope();
 
 		$this->token->getToken(ITokenFacade::AUTHORIZATION_CODE)->getStorage()->remove($code);
 	}
@@ -58,8 +61,8 @@ class AuthorizationCode extends GrantType
 		$accessTokenStorage = $this->token->getToken(ITokenFacade::ACCESS_TOKEN);
 		$refreshTokenStorage = $this->token->getToken(ITokenFacade::REFRESH_TOKEN);
 
-		$accessToken = $accessTokenStorage->create($client, $this->user->getId(), $this->getScope());
-		$refreshToken = $refreshTokenStorage->create($client, $this->user->getId(), $this->getScope());
+		$accessToken = $accessTokenStorage->create($client, $this->user->getId() ?: $this->entity->getUserId(), $this->getScope());
+		$refreshToken = $refreshTokenStorage->create($client, $this->user->getId() ?: $this->entity->getUserId(), $this->getScope());
 
 		return array(
 			'access_token' => $accessToken->getAccessToken(),
