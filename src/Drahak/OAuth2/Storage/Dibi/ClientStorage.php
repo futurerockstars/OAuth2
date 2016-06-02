@@ -42,7 +42,7 @@ class ClientStorage extends Object implements IClientStorage
 	{
 		if (!$clientId) return NULL;
 
-		$selection = $this->context->select('*')->from($this->getTable())->where('client_id = %i', $clientId);
+		$selection = $this->context->select('*')->from($this->getTable())->where('client_id = %s', $clientId);
 		if ($clientSecret) {
 			$selection->where('secret = %s', $clientSecret);
 		}
