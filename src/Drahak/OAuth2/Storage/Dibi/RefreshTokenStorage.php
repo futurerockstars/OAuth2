@@ -46,7 +46,7 @@ class RefreshTokenStorage extends Object implements IRefreshTokenStorage
 			'client_id' => $refreshToken->getClientId(),
 			'user_id' => $refreshToken->getUserId(),
 			'expires_at' => $refreshToken->getExpires()
-		));
+		))->execute();
 	}
 
 	/**
