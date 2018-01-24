@@ -5,7 +5,7 @@ use Drahak\OAuth2\IKeyGenerator;
 use Drahak\OAuth2\Storage\ITokenFacade;
 use Drahak\OAuth2\Storage\InvalidAccessTokenException;
 use Drahak\OAuth2\Storage\Clients\IClient;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * AccessToken
@@ -15,8 +15,10 @@ use Nette\Object;
  * @property-read int $lifetime
  * @property-read IAccessTokenStorage $storage
  */
-class AccessTokenFacade extends Object implements ITokenFacade
+class AccessTokenFacade implements ITokenFacade
 {
+
+	use SmartObject;
 
 	/** @var IAccessTokenStorage */
 	private $storage;

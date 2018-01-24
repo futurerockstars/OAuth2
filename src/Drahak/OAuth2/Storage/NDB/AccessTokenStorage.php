@@ -8,15 +8,17 @@ use Drahak\OAuth2\Storage\AccessTokens\IAccessToken;
 use Nette\Database\Context;
 use Nette\Database\SqlLiteral;
 use Nette\Database\Table\ActiveRow;
-use Nette\Object;
+use Nette\SmartObject;
 
 /**
  * AccessTokenStorage
  * @package Drahak\OAuth2\Storage\AccessTokens
  * @author Drahomír Hanák
  */
-class AccessTokenStorage extends Object implements IAccessTokenStorage
+class AccessTokenStorage implements IAccessTokenStorage
 {
+
+	use SmartObject;
 
 	/** @var Context */
 	private $context;

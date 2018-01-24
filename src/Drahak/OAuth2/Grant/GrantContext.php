@@ -2,15 +2,16 @@
 namespace Drahak\OAuth2\Grant;
 
 use Drahak\OAuth2\InvalidStateException;
-use Nette\Object;
 
 /**
  * GrantContext
  * @package Drahak\OAuth2\Grant
  * @author Drahomír Hanák
  */
-class GrantContext extends Object
+class GrantContext
 {
+
+	use \Nette\SmartObject;
 
 	/** @var array */
 	private $grantTypes = array();

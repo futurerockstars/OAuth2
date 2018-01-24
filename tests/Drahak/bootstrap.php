@@ -7,7 +7,7 @@ require_once __DIR__ . '/TestCase.php';
 
 
 // configure environment
-Tester\Helpers::setup();
+Tester\Environment::setup();
 class_alias('Tester\Assert', 'Assert');
 date_default_timezone_set('Europe/Prague');
 
@@ -29,5 +29,5 @@ function id($val) {
 }
 
 function run(Tests\TestCase $testCase) {
-	$testCase->run(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);
+	$testCase->runTest(isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : NULL);
 }
