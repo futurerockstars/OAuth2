@@ -1,5 +1,5 @@
 {
-	"name": "drahak/oauth2",
+	"name": "vymak/oauth2",
 	"type": "library",
 	"description": "Nette OAuth2 Provider bundle",
 	"keywords": ["nette", "OAuth2", "provider", "server", "drahak"],
