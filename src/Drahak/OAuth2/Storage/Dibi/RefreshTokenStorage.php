@@ -4,8 +4,6 @@ namespace Drahak\OAuth2\Storage\Dibi;
 use Drahak\OAuth2\Storage\RefreshTokens\IRefreshTokenStorage;
 use Drahak\OAuth2\Storage\RefreshTokens\IRefreshToken;
 use Drahak\OAuth2\Storage\RefreshTokens\RefreshToken;
-use Nette\Database\Context;
-use Nette\Database\SqlLiteral;
 use Nette\SmartObject;
 
 /**
@@ -18,10 +16,10 @@ class RefreshTokenStorage implements IRefreshTokenStorage
 
 	use SmartObject;
 
-	/** @var \DibiConnection */
+	/** @var \Dibi\Connection */
 	private $context;
 
-	public function __construct(\DibiConnection $context)
+	public function __construct(\Dibi\Connection $context)
 	{
 		$this->context = $context;
 	}

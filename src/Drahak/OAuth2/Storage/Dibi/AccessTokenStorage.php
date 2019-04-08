@@ -1,13 +1,11 @@
 <?php
 namespace Drahak\OAuth2\Storage\Dibi;
 
+use Dibi\Row;
 use Drahak\OAuth2\InvalidScopeException;
 use Drahak\OAuth2\Storage\AccessTokens\AccessToken;
 use Drahak\OAuth2\Storage\AccessTokens\IAccessTokenStorage;
 use Drahak\OAuth2\Storage\AccessTokens\IAccessToken;
-use Nette\Database\Context;
-use Nette\Database\SqlLiteral;
-use Nette\Database\Table\ActiveRow;
 use Nette\SmartObject;
 
 /**
@@ -20,10 +18,10 @@ class AccessTokenStorage implements IAccessTokenStorage
 
 	use SmartObject;
 
-	/** @var \DibiConnection */
+	/** @var \Dibi\Connection */
 	private $context;
 
-	public function __construct(\DibiConnection $context)
+	public function __construct(\Dibi\Connection $context)
 	{
 		$this->context = $context;
 	}
@@ -96,7 +94,7 @@ class AccessTokenStorage implements IAccessTokenStorage
 	 */
 	public function getValidAccessToken($accessToken)
 	{
-		/** @var ActiveRow $row */
+		/** @var Row $row */
 		$row = $this->context->select('*')->from($this->getTable())
 			->where('access_token = %s', $accessToken)
 			->where('TIMEDIFF(expires_at, NOW()) >= 0')
