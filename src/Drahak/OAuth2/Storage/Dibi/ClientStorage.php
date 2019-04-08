@@ -4,7 +4,6 @@ namespace Drahak\OAuth2\Storage\Dibi;
 use Drahak\OAuth2\Storage\Clients\IClientStorage;
 use Drahak\OAuth2\Storage\Clients\IClient;
 use Drahak\OAuth2\Storage\Clients\Client;
-use Nette\Database\Context;
 use Nette\SmartObject;
 
 /**
@@ -17,10 +16,10 @@ class ClientStorage implements IClientStorage
 
 	use SmartObject;
 
-	/** @var \DibiConnection */
+	/** @var \Dibi\Connection */
 	private $context;
 
-	public function __construct(\DibiConnection $context)
+	public function __construct(\Dibi\Connection $context)
 	{
 		$this->context = $context;
 	}
