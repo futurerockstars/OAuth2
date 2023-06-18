@@ -4,7 +4,9 @@ namespace Drahak\OAuth2\DI;
 use Nette\Configurator;
 use Nette\DI\CompilerExtension;
 use Nette\DI\ContainerBuilder;
-use Nette\DI\ServiceDefinition;
+use Nette\DI\Definitions\ServiceDefinition;
+use Nette\Schema\Expect;
+use Nette\Schema\Schema;
 
 /**
  * OAuth2 compiler extension
@@ -29,20 +31,19 @@ class Extension extends CompilerExtension
 		),
 	);
 
-	/**
-	 * Default DI settings
-	 * @var array
-	 */
-	protected $defaults = array(
-		'accessTokenStorage' => NULL,
-		'authorizationCodeStorage' => NULL,
-		'clientStorage' => NULL,
-		'refreshTokenStorage' => NULL,
-		'accessTokenLifetime' => 3600, // 1 hour
-		'refreshTokenLifetime' => 36000, // 10 hours
-		'authorizationCodeLifetime' => 360, // 6 minutes
-		'storage' => NULL,
-	);
+	public function getConfigSchema(): Schema
+	{
+		return Expect::structure([
+			'accessTokenStorage' => Expect::anyOf(Expect::string(), Expect::null())->default(null),
+			'authorizationCodeStorage' => Expect::anyOf(Expect::string(), Expect::null())->default(null),
+			'clientStorage' => Expect::anyOf(Expect::string(), Expect::null())->default(null),
+			'refreshTokenStorage' => Expect::anyOf(Expect::string(), Expect::null())->default(null),
+			'accessTokenLifetime' => Expect::int(3600), // 1 hour
+			'refreshTokenLifetime' => Expect::int(36000), // 10 hours
+			'authorizationCodeLifetime' => Expect::int(360), // 6 minutes
+			'storage' => Expect::anyOf(Expect::string(), Expect::null())->default(null),
+		])->castTo('array');
+	}
 
 	/**
 	 * Load DI configuration
@@ -50,7 +51,7 @@ class Extension extends CompilerExtension
 	public function loadConfiguration()
 	{
 		$container = $this->getContainerBuilder();
-		$config = $this->getConfig($this->defaults);
+		$config = $this->config;
 
 		// Library common
 		$container->addDefinition($this->prefix('keyGenerator'))
@@ -125,7 +126,7 @@ class Extension extends CompilerExtension
 	{
 		$definitionas = $container->getDefinitions();
 		foreach ($definitionas as $definition) {
-			if ($definition->class === $type) {
+			if ($definition instanceof ServiceDefinition && $definition->class === $type) {
 				return $definition;
 			}
 		}
