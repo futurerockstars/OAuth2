@@ -53,9 +53,8 @@ class AuthorizationCode extends GrantType
 
 	/**
 	 * Generate access token
-	 * @return string
 	 */
-	protected function generateAccessToken()
+	protected function generateAccessToken(): array
 	{
 		$client = $this->getClient();
 		$accessTokenStorage = $this->token->getToken(ITokenFacade::ACCESS_TOKEN);

@@ -36,9 +36,8 @@ class RefreshToken extends GrantType
 
 	/**
 	 * Generate access token
-	 * @return string
 	 */
-	protected function generateAccessToken()
+	protected function generateAccessToken(): array
 	{
 		$accessTokenStorage = $this->token->getToken(ITokenFacade::ACCESS_TOKEN);
 		$refreshTokenStorage = $this->token->getToken(ITokenFacade::REFRESH_TOKEN);

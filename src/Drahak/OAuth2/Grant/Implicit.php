@@ -39,7 +39,7 @@ class Implicit extends GrantType
 	 * Generate access token
 	 * @return string
 	 */
-	protected function generateAccessToken()
+	protected function generateAccessToken(): array
 	{
 		$accessTokenStorage = $this->token->getToken(ITokenFacade::ACCESS_TOKEN);
 		$accessToken = $accessTokenStorage->create($this->getClient(), $this->user->getId(), $this->getScope());

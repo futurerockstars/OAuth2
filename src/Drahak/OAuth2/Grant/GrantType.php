@@ -130,8 +130,13 @@ abstract class GrantType implements IGrant
 
 	/**
 	 * Generate access token
-	 * @return string
+	 * @return array{
+	 *     access_token: string,
+	 *     token_type: string,
+	 *     expires_in: string,
+	 *     refresh_token: string,
+	 * }
 	 */
-	protected abstract function generateAccessToken();
+	protected abstract function generateAccessToken(): array;
 
 }
